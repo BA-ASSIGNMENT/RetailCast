@@ -1,0 +1,19 @@
+Required Libraries
+
+pip install numpy
+
+pip install pandas 
+
+pip install matplotlib seaborn 
+
+pip install scikit-learn
+
+pip install tensorflow torch torchvision torchaudio*
+
+pip install statsmodels prophet
+
+pip install nltk spacy transformers
+
+pip install flask streamlit     
+
+pip install speechrecognition
