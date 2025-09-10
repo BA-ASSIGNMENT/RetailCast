@@ -3,7 +3,7 @@ import numpy as np
 
 #Load the dataset
 df=pd.read_csv('Dataset/online_retail.csv',encoding='ISO-8859-1')
-print(df.head())
+
 #remove rows with missing CustomerID
 df=df.dropna(subset='CustomerID')
 #Remove negative quantities
@@ -19,4 +19,16 @@ df['Month']=df['InvoiceDate'].dt.month
 df['Day']=df['InvoiceDate'].dt.day
 df['Hour']=df['InvoiceDate'].dt.hour
 
-print(df[['InvoiceDate','Year','Month','Day','Hour']].head())
+#------------------ Aggregate sales by Date ------------------
+
+daily_sales = df.groupby(df['InvoiceDate'].dt.date).agg({
+    'Quantity': 'sum',
+    'TotalPrice': 'sum'
+}).reset_index()
+
+daily_sales.columns = ['Date', 'TotalQuantity', 'TotalSales']
+
+
+print("Aggregated Daily Sales Data:")
+print(daily_sales.head())
+
