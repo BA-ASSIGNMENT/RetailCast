@@ -1,5 +1,11 @@
 import pandas as pd   
 import numpy as np  
+<<<<<<< Updated upstream
+=======
+import matplotlib.pyplot as plt
+from statsmodels.tsa.arima.model import ARIMA as arima
+from statsmodels.graphics.tsaplots import plot_acf,plot_pacf
+>>>>>>> Stashed changes
 
 #Load the dataset
 df=pd.read_csv('Dataset/online_retail.csv',encoding='ISO-8859-1')
