@@ -1,7 +1,7 @@
 import pandas as pd   
 import numpy as np  
 import matplotlib.pyplot as plt
-from statsmodel.tsa.arima.model import arima
+from statsmodels.tsa.arima.model import ARIMA as arima
 from statsmodels.graphics.tsaplots import plot_acf,plot_pacf
 
 #Load the dataset
