@@ -1,14 +1,13 @@
-import pandas as pd   
-import numpy as np  
-import matplotlib.pyplot as plt
-from statsmodels.tsa.arima.model import ARIMA as arima
-from statsmodels.graphics.tsaplots import plot_acf,plot_pacf
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.arima.model import ARIMA
+
 
 #Load the dataset
 df=pd.read_csv('Dataset/online_retail.csv',encoding='ISO-8859-1')
 
 #remove rows with missing CustomerID
-df=df.dropna(subset='CustomerID')
+df=df.dropna(subset=['CustomerID'])
 #Remove negative quantities
 df=df[df['Quantity']>0]
 #Create a new column for total price
@@ -31,44 +30,36 @@ daily_sales = df.groupby(df['InvoiceDate'].dt.date).agg({
 
 daily_sales.columns = ['Date', 'TotalQuantity', 'TotalSales']
 
-#print("Aggregated Daily Sales Data:")
-#print(daily_sales.head())
+print("Aggregated Daily Sales Data:")
+print(daily_sales.head())
 
 #-------Train forecast model using ARIMA------
 
 #use daily sales
 ts=daily_sales.set_index('Date')['TotalSales']
-#plot time series
-ts.plot(figsize=(10,5),title="Daily Sales")
-plt.show()
 
-#Make data stationary
+# Convert the index to datetime objects
+ts.index = pd.to_datetime(ts.index)
+
+
+#Make data stationary 
 ts_diff=ts.diff().dropna()
 
-plot_acf(ts_diff,lags=30)
-plot_pacf(ts_diff,lags=30)
-plt.show()
 
 #Train arima model
-model=arima(ts, order=(1,1,1))
+model=ARIMA(ts, order=(1,1,1))
 model_fit=model.fit()
 
-
+# Print the model summary for detailed information
 print(model_fit.summary())
 
+#----------predict demands for future months---------#
 #Forecast
 forecast_steps=90  #forecast 90 days
 forecast=model_fit.forecast(steps=forecast_steps)
 
 
-#plot forecast 
-plt.figure(figsize=(10,5))
-plt.plot(ts,label="Historical sales")
-plt.plot(pd.date_range(ts.index[-1], periods=forecast_steps+1, freq="D")[1:], 
-         forecast, label="Forecast", color="red")
-plt.title("ARIMA Sales Forecast")
-plt.legend()
-plt.show()
+print("\nForecasted Sales (next 3 months):")
+display(forecast)
 
-
-
+# 
