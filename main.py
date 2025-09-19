@@ -60,6 +60,6 @@ forecast=model_fit.forecast(steps=forecast_steps)
 
 
 print("\nForecasted Sales (next 3 months):")
-display(forecast)
+print(forecast)
 
 # 
