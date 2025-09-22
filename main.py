@@ -1,65 +1,49 @@
 import pandas as pd
 import numpy as np
-from statsmodels.tsa.arima.model import ARIMA
+import matplotlib.pyplot as plt
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
 
 
-#Load the dataset
-df=pd.read_csv('Dataset/online_retail.csv',encoding='ISO-8859-1')
 
-#remove rows with missing CustomerID
-df=df.dropna(subset=['CustomerID'])
-#Remove negative quantities
-df=df[df['Quantity']>0]
-#Create a new column for total price
-df['TotalPrice']=df['Quantity']*df['UnitPrice']
+# Load the dataset
+df = pd.read_csv('dataset/online_retail.csv', encoding='ISO-8859-1')
 
-#convert Invoicedate to datetime format
-df['InvoiceDate']=pd.to_datetime(df['InvoiceDate'])
-#Extract time,year,day and time
-df['Year']=df['InvoiceDate'].dt.year
-df['Month']=df['InvoiceDate'].dt.month
-df['Day']=df['InvoiceDate'].dt.day
-df['Hour']=df['InvoiceDate'].dt.hour
+# Clean data
+df = df.dropna(subset=['CustomerID'])
+df = df[df['Quantity'] > 0]
+df['TotalPrice'] = df['Quantity'] * df['UnitPrice']
+df['InvoiceDate'] = pd.to_datetime(df['InvoiceDate'])
 
-#------------------ Aggregate sales by Date ------------------
-
+# Aggregate daily sales
 daily_sales = df.groupby(df['InvoiceDate'].dt.date).agg({
     'Quantity': 'sum',
     'TotalPrice': 'sum'
 }).reset_index()
 
 daily_sales.columns = ['Date', 'TotalQuantity', 'TotalSales']
+ts = daily_sales.set_index('Date')['TotalSales']
 
-print("Aggregated Daily Sales Data:")
-print(daily_sales.head())
+#------------------- Time Series Forecasting ------------------
 
-#-------Train forecast model using ARIMA------
+daily_sales.columns = ['Date', 'TotalQuantity', 'TotalSales']
+ts = daily_sales.set_index('Date')['TotalSales']
 
-#use daily sales
-ts=daily_sales.set_index('Date')['TotalSales']
+# Fit SARIMA model (p,d,q) x (P,D,Q,s)
+# s=30 (monthly seasonality in daily data)
+model = SARIMAX(ts, order=(1,1,1), seasonal_order=(1,1,1,30))
+model_fit = model.fit(disp=False)
 
-# Convert the index to datetime objects
-ts.index = pd.to_datetime(ts.index)
+# Forecast for next 90 days
+forecast_steps = 90
+forecast = model_fit.forecast(steps=forecast_steps)
 
-
-#Make data stationary 
-ts_diff=ts.diff().dropna()
-
-
-#Train arima model
-model=ARIMA(ts, order=(1,1,1))
-model_fit=model.fit()
-
-# Print the model summary for detailed information
-print(model_fit.summary())
-
-#----------predict demands for future months---------#
-#Forecast
-forecast_steps=90  #forecast 90 days
-forecast=model_fit.forecast(steps=forecast_steps)
-
-
-print("\nForecasted Sales (next 3 months):")
-print(forecast)
-
-# 
+# Plot forecast
+plt.figure(figsize=(10,5))
+plt.plot(ts, label="Historical Sales")
+plt.plot(pd.date_range(ts.index[-1], periods=forecast_steps+1, freq="D")[1:], 
+         forecast, label="Forecast", color="red")
+plt.title("SARIMA Sales Forecast (Seasonality & Trend)")
+plt.legend()
+plt.show()
