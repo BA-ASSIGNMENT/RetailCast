@@ -46,4 +46,48 @@ plt.plot(pd.date_range(ts.index[-1], periods=forecast_steps+1, freq="D")[1:],
          forecast, label="Forecast", color="red")
 plt.title("SARIMA Sales Forecast (Seasonality & Trend)")
 plt.legend()
+plt.show()     
+
+
+#------------------- Classification (Customer Segmentation) ------------------
+
+# Reference date for recency (last purchase date in dataset)
+reference_date = df['InvoiceDate'].max()
+
+# Compute RFM values
+rfm = df.groupby('CustomerID').agg({
+    'InvoiceDate': lambda x: (reference_date - x.max()).days,  # Recency
+    'InvoiceNo': 'nunique',                                   # Frequency
+    'TotalPrice': 'sum'                                       # Monetary
+}).reset_index()
+
+rfm.columns = ['CustomerID', 'Recency', 'Frequency', 'Monetary']
+
+# Normalize RFM features
+scaler = StandardScaler()
+rfm_scaled = scaler.fit_transform(rfm[['Recency', 'Frequency', 'Monetary']])
+
+# Apply K-Means clustering
+kmeans = KMeans(n_clusters=4, random_state=42)
+rfm['Cluster'] = kmeans.fit_predict(rfm_scaled)
+
+# Assign labels to clusters (simple interpretation)
+cluster_labels = {
+    0: 'Loyal Customers',
+    1: 'At-Risk Customers',
+    2: 'High-Value Customers',
+    3: 'Others'
+}
+rfm['Segment'] = rfm['Cluster'].map(cluster_labels)
+
+# Display a few results
+print(rfm.head(10))
+
+# Plot clusters (Recency vs Monetary for visualization)
+plt.figure(figsize=(8,6))
+plt.scatter(rfm['Recency'], rfm['Monetary'], c=rfm['Cluster'], cmap='viridis', alpha=0.6)
+plt.xlabel("Recency (days since last purchase)")
+plt.ylabel("Monetary (total spent)")
+plt.title("Customer Segmentation (K-Means Clusters)")
 plt.show()
+
