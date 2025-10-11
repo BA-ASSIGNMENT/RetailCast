@@ -96,5 +96,5 @@ def create_dashboard():
     print(f"7. Top Products for Placement: {top_prod_sales.head().index.tolist()}")
     print(f"8. NLP Sentiment Accuracy: {acc:.2f}")
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     create_dashboard()
