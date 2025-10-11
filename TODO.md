@@ -1,0 +1,7 @@
+- [x] Modify time_series.py to remove image saving and keep data return
+- [x] Modify classification.py to remove image saving and keep data return
+- [x] Modify deep_learning.py to remove image and text file saving, keep data returns
+- [x] Modify nlp.py to remove image and text file saving, keep data return
+- [x] Modify dashboard.py to print insights instead of saving image and text file
+- [x] Modify main.py to print key outputs from each analysis to terminal
+- [x] Test the modified script by running main.py to verify outputs are shown on terminal
