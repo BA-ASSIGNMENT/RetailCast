@@ -4,7 +4,6 @@ from time_series import time_series_analysis
 from classification import customer_segmentation
 from deep_learning import deep_learning_analysis
 from nlp import nlp_analysis
-from chatbot import chatbot_demo
 from dashboard import create_dashboard
 
 def main():
@@ -39,10 +38,6 @@ def main():
     acc = nlp_analysis()
     print("NLP analysis completed.")
     print("NLP sentiment accuracy:", acc)
-
-    print("Running chatbot demo...")
-    chatbot_demo()
-    print("Chatbot demo completed.")
 
     print("Creating dashboard...")
     create_dashboard()

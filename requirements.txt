@@ -1,0 +1,9 @@
+pandas
+numpy
+scikit-learn
+prophet
+nltk
+matplotlib
+speechrecognition
+pyttsx3
+scipy
