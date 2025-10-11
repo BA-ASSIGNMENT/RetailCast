@@ -1,0 +1,9 @@
+Dashboard Insights:
+1. Predicted Demand: Average forecast for next 30 days: 55487.87
+2. Customer Segments: {'New': 3053, 'Loyal': 1062, 'High-value': 211, 'At-risk': 13}
+3. Product Bundles: {('22386', '85099B'): 546, ('22697', '22699'): 541, ('22726', '22727'): 530, ('20725', '22384'): 523, ('20725', '22383'): 519}
+4. Recommendations: ['23306', '22301', '72803A', '23307', '21136', '22961', '22993', '23165', '72741', '23166']
+5. Suggested Stock Levels: {'23843': 16570.78032786885, '22423': 14041.189641246412, '85123A': 9971.407892389403, '85099B': 8449.04818739709, '23166': 13267.868313227998}
+6. Peak Hours for Staff: 12:00 - 14:00
+7. Top Products for Placement: ['PAPER CRAFT , LITTLE BIRDIE', 'REGENCY CAKESTAND 3 TIER', 'WHITE HANGING HEART T-LIGHT HOLDER', 'JUMBO BAG RED RETROSPOT', 'MEDIUM CERAMIC TOP STORAGE JAR']
+8. NLP Sentiment Accuracy: 1.00
