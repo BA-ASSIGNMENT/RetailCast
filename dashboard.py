@@ -41,7 +41,7 @@ def create_dashboard():
     top_prod_sales = df.groupby('Description')['TotalPrice'].sum().sort_values(ascending=False).head(5)
 
     # Create figures
-    fig, axs = plt.subplots(2, 3, figsize=(20, 12))
+    fig, axs = plt.subplots(2, 3, figsize=(24, 14))
     fig.subplots_adjust(bottom=0.2)
 
     # 1. Predicted demand (last 30 days forecast)
@@ -52,13 +52,14 @@ def create_dashboard():
     axs[0, 0].tick_params(axis='x', rotation=90)
 
     # 2. Customer segments
-    axs[0, 1].pie(segment_counts.values, labels=segment_counts.index, autopct='%1.1f%%')
+    segment_counts.plot(kind='bar', ax=axs[0, 1])
     axs[0, 1].set_title('Customer Segments')
+    axs[0, 1].tick_params(axis='x', rotation=45)
 
     # 3. Top co-bought pairs (product bundles)
-    co_bought_summary.plot(kind='bar', ax=axs[0, 2])
+    co_bought_summary.plot(kind='barh', ax=axs[0, 2])
     axs[0, 2].set_title('Top Product Bundles (Co-bought)')
-    axs[0, 2].tick_params(axis='x', rotation=45)
+    axs[0, 2].tick_params(axis='y', rotation=0)
 
     # 4. Suggested stock levels (example: avg + forecast for top products)
     products = list(stock_levels.keys())
